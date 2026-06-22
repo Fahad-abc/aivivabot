@@ -17,7 +17,7 @@ class ApiService {
         Uri.parse(backendUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
-      ).timeout(const Duration(seconds: 8));
+      ).timeout(const Duration(seconds: 25));
 
       if (response.statusCode == 200) {
         return response;

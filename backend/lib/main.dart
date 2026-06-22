@@ -5,13 +5,13 @@ import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 import 'package:http/http.dart' as http;
-import 'package:dotenv/dotenv.dart' as dotenv;
+import 'package:dotenv/dotenv.dart';
 
 const String _openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
 
 Future<void> runServer() async {
-  dotenv.load();
-  final String _apiKey = Platform.environment['OPENROUTER_API_KEY'] ?? dotenv.env['OPENROUTER_API_KEY'] ?? '';
+  final env = DotEnv()..load();
+  final String _apiKey = Platform.environment['OPENROUTER_API_KEY'] ?? env['OPENROUTER_API_KEY'] ?? '';
 
   if (_apiKey.isEmpty) {
     print('❌ ERROR: OPENROUTER_API_KEY not set. Set it in environment or .env file.');

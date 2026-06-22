@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:http/http.dart' as http;
-import 'package:dotenv/dotenv.dart' as dotenv;
+import 'package:dotenv/dotenv.dart';
 
 const String targetUrl = 'https://openrouter.ai/api/v1';
 
 void main() async {
-  dotenv.load();
-  final String apiKey = Platform.environment['OPENROUTER_API_KEY'] ?? dotenv.env['OPENROUTER_API_KEY'] ?? '';
+  final env = DotEnv()..load();
+  final String apiKey = Platform.environment['OPENROUTER_API_KEY'] ?? env['OPENROUTER_API_KEY'] ?? '';
 
   if (apiKey.isEmpty) {
     print('❌ ERROR: OPENROUTER_API_KEY not set in environment or .env file.');
