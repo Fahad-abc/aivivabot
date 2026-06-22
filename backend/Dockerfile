@@ -3,10 +3,10 @@ WORKDIR /app
 COPY pubspec.* ./
 RUN dart pub get
 COPY . .
-RUN dart compile exe bin/server.dart -o bin/server
+RUN dart compile exe bin/server.dart -o /app/server
 
-FROM scratch
-COPY --from=build /runtime/ /
-COPY --from=build /app/bin/server /app/bin/server
+FROM debian:stable-slim
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/server /app/server
 EXPOSE 8080
-CMD ["/app/bin/server"]
+CMD ["/app/server"]
