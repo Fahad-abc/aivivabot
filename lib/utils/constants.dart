@@ -26,8 +26,8 @@ class AppConstants {
   static String get openRouterApiKey => const String.fromEnvironment('OPENROUTER_API_KEY', defaultValue: '');
 
   // ✅ SETTINGS FOR PRODUCTION (Vercel)
-  static const bool useProductionBackend = false;  // ← TRUE after Vercel deploy
-  static const String productionBaseUrl = 'https://aivivabot.vercel.app';  // ← REPLACE after Vercel deploy
+  static const bool useProductionBackend = true;  // ← TRUE for Vercel
+  static const String productionBaseUrl = 'https://aivivabot.vercel.app';  // ← Vercel URL
 
   // ✅ YOUR COMPUTER'S IP ADDRESS (for physical device testing)
   static const String _computerIp = '192.168.100.133';  // ← CHANGE THIS TO YOUR IP
