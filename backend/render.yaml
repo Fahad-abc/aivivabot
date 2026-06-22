@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aiviva-backend
+    env: docker
+    region: singapore
+    plan: free
+    buildCommand: cd backend && dart pub get
+    startCommand: cd backend && dart run bin/server.dart
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: PORT
+        value: "8080"

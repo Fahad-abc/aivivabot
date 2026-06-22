@@ -1,0 +1,30 @@
+# Dart
+.dart_tool/
+build/
+.packages
+.pub/
+*.log
+*.pid
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Flutter
+flutter/
+*.apk
+*.aab
+*.ipa
+android/.gradle/
+ios/Pods/
+ios/.symlinks/

@@ -1,0 +1,63 @@
+name: aivivabot
+description: AIVivaBot - AI-Powered Viva Assistant for FYP Students
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^3.15.2
+  firebase_auth: ^5.7.0
+  google_sign_in: ^6.3.0
+
+  # UI & Design
+  google_fonts: ^6.2.1
+  provider: ^6.1.1
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # File & PDF
+  file_picker: ^11.0.2
+  syncfusion_flutter_pdf: ^24.2.9  # ✅ ADDED - For PDF text extraction
+
+  # PDF Generation
+  pdf: ^3.10.7
+  share_plus: ^10.0.0
+
+  # Networking & API
+  http: ^1.2.0
+
+  # Speech & Audio
+  speech_to_text: ^7.4.0
+  flutter_tts: ^3.8.5
+
+  # Utilities
+  path_provider: ^2.1.2
+  permission_handler: ^11.3.0
+  connectivity_plus: ^6.0.3
+
+  # Animations
+  lottie: ^2.7.0
+
+  # Icons
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.0
+
+flutter:
+  uses-material-design: true
+
+  # assets:
+  #   - assets/
+  #   - assets/images/
+  #   - assets/fonts/

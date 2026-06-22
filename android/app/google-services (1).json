@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "496798876863",
+    "project_id": "aivivabot",
+    "storage_bucket": "aivivabot.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496798876863:android:7e62fc3dd5e32600ae320a",
+        "android_client_info": {
+          "package_name": "com.aivivabot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496798876863-l85moie5dll57lq2ngej4n2aqc5s2o0b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aivivabot",
+            "certificate_hash": "a53af38b10532b036482246858e0c66b03a6c51d"
+          }
+        },
+        {
+          "client_id": "496798876863-qeh0op81u5rv6ibqtrq27pklaodpmgg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlaawK7JuiOCts7f9oewrZ3RnVjq9Uacs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496798876863-qeh0op81u5rv6ibqtrq27pklaodpmgg4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "496798876863-s7kl8vmlv446sh86kn96t63oh7peq9j1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aivivabot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496798876863:android:2cfe01618af78aceae320a",
+        "android_client_info": {
+          "package_name": "com.example.aivivabot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496798876863-qeh0op81u5rv6ibqtrq27pklaodpmgg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlaawK7JuiOCts7f9oewrZ3RnVjq9Uacs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496798876863-qeh0op81u5rv6ibqtrq27pklaodpmgg4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "496798876863-s7kl8vmlv446sh86kn96t63oh7peq9j1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aivivabot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
