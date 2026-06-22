@@ -25,9 +25,9 @@ class AppConstants {
   static const String openRouterModel = 'meta-llama/llama-3-8b-instruct:nitro';
   static String get openRouterApiKey => const String.fromEnvironment('OPENROUTER_API_KEY', defaultValue: '');
 
-  // ✅ SETTINGS FOR PRODUCTION (Render)
-  static const bool useProductionBackend = false;  // ← TRUE after Render deploy
-  static const String productionBaseUrl = 'https://aiviva-backend.onrender.com';  // ← REPLACE with actual Render URL
+  // ✅ SETTINGS FOR PRODUCTION (Vercel)
+  static const bool useProductionBackend = false;  // ← TRUE after Vercel deploy
+  static const String productionBaseUrl = 'https://aivivabot.vercel.app';  // ← REPLACE after Vercel deploy
 
   // ✅ YOUR COMPUTER'S IP ADDRESS (for physical device testing)
   static const String _computerIp = '192.168.100.133';  // ← CHANGE THIS TO YOUR IP
