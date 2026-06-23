@@ -236,6 +236,7 @@ class _VivaSessionScreenState extends State<VivaSessionScreen>
           ? SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

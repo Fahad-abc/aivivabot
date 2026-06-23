@@ -1073,13 +1073,16 @@ class _HudCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(0.75 + pulse * 0.25),
-              letterSpacing: 0.5,
+          Flexible(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withOpacity(0.75 + pulse * 0.25),
+                letterSpacing: 0.5,
+              ),
             ),
           ),
         ],
