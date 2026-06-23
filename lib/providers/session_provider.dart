@@ -31,6 +31,7 @@ class SessionProvider extends ChangeNotifier {
   String _currentLanguage = 'english';
   bool _ttsInitialized = false;
   bool _isCompletingSession = false;
+  String? _currentHint;
   String _documentContent = ''; // ✅ ADDED
 
   // Cache for ideal answers
@@ -50,6 +51,7 @@ class SessionProvider extends ChangeNotifier {
   bool get isAISpeaking => _isAISpeaking;
   String? get currentQuestionText => _currentQuestionText;
   String? get errorMessage => _errorMessage;
+  String? get currentHint => _currentHint;
   int get currentQuestionNumber => _currentQuestionNumber;
   int get totalQuestions => _totalQuestions;
   String? get currentUserAnswer => _currentUserAnswer;
@@ -60,7 +62,8 @@ class SessionProvider extends ChangeNotifier {
 
   bool get hasMoreQuestions {
     if (_currentSession == null) return false;
-    return _currentQuestionNumber < _currentSession!.questions.length;
+    if (_isCompletingSession) return false;
+    return _currentQuestionNumber <= _currentSession!.questions.length;
   }
 
   int get remainingHints => (_maxHints - _hintsUsed).clamp(0, _maxHints);
@@ -307,6 +310,7 @@ class SessionProvider extends ChangeNotifier {
         return;
       }
 
+      _currentHint = null;
       _currentSession!.moveToNextQuestion();
       _currentQuestionNumber++;
       _currentQuestionText = _currentSession!.currentQuestion.text;
@@ -433,20 +437,21 @@ class SessionProvider extends ChangeNotifier {
     return _idealAnswerCache[questionText];
   }
 
-  Future<void> requestHint() async {
-    if (_currentSession == null) return;
-    if (_hintsUsed >= _maxHints) return;
+  Future<String?> requestHint() async {
+    if (_currentSession == null) return null;
+    if (_hintsUsed >= _maxHints) return null;
 
     _hintsUsed++;
 
     try {
-      final hint = await _geminiService.getHint(_currentSession!.currentQuestion);
-      print('Hint: $hint');
+      _currentHint = await _geminiService.getHint(_currentSession!.currentQuestion);
+      notifyListeners();
+      return _currentHint;
     } catch (e) {
       print('Hint error: $e');
+      _currentHint = null;
+      return null;
     }
-
-    notifyListeners();
   }
 
   Future<void> completeSession() async {
@@ -486,6 +491,7 @@ class SessionProvider extends ChangeNotifier {
     _hintsUsed = 0;
     _idealAnswerCache.clear();
     _answeredQuestionIds.clear();
+    _currentHint = null;
     _isCompletingSession = false;
     notifyListeners();
   }

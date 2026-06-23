@@ -842,14 +842,29 @@ class _VivaSessionScreenState extends State<VivaSessionScreen>
 
   void _requestHint() async {
     final sessionProvider = Provider.of<SessionProvider>(context, listen: false);
-    await sessionProvider.requestHint();
+    final hint = await sessionProvider.requestHint();
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Hint requested!'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    if (mounted && hint != null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: [
+              const Icon(Icons.lightbulb, color: Color(0xFFFFB800)),
+              const SizedBox(width: 8),
+              const Text('Hint'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(hint, style: const TextStyle(fontSize: 15, height: 1.5)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Got it'),
+            ),
+          ],
         ),
       );
     }
