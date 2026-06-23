@@ -312,7 +312,6 @@ class SessionProvider extends ChangeNotifier {
         print('Session complete - no more questions');
         _isLoading = false;
         notifyListeners();
-        _isCompletingSession = true;
         await completeSession();
         return;
       }
@@ -392,7 +391,6 @@ class SessionProvider extends ChangeNotifier {
 
         await speakQuestion(_currentQuestionText!);
       } else {
-        _isCompletingSession = true;
         await completeSession();
       }
 
