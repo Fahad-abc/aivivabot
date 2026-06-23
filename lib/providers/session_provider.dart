@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/session_model.dart';
 import '../models/question_model.dart';
 import '../services/api/gemini_service.dart';
@@ -134,13 +135,19 @@ class SessionProvider extends ChangeNotifier {
 
     String ttsLanguage = 'en-US';
     if (_currentLanguage == 'roman_urdu') {
-      ttsLanguage = 'ur-PK';  // Use Urdu TTS for Roman Urdu (Pakistani accent)
-      print('Roman Urdu selected, using Urdu TTS for Pakistani accent');
+      ttsLanguage = 'ur-PK';
     }
 
     await _tts.init(language: ttsLanguage);
+
+    final prefs = await SharedPreferences.getInstance();
+    final savedSpeed = prefs.getDouble('voiceSpeed') ?? 1.0;
+    final savedPitch = prefs.getDouble('voicePitch') ?? 1.0;
+    await _tts.setSpeechRate(savedSpeed / 2.0);
+    await _tts.setPitch(savedPitch);
+
     _ttsInitialized = true;
-    print('TTS initialized with language: $ttsLanguage');
+    print('TTS initialized: lang=$ttsLanguage, speed=$savedSpeed, pitch=$savedPitch');
   }
 
   Future<void> speakQuestion(String question) async {
@@ -459,9 +466,17 @@ class SessionProvider extends ChangeNotifier {
       _isCompletingSession = true;
       await _tts.stop();
       _currentSession!.completeSession();
-      await _databaseService.saveSession(_currentSession!);
-      _sessionHistory.add(_currentSession!);
-      print('Session completed and saved');
+
+      final prefs = await SharedPreferences.getInstance();
+      final autoSave = prefs.getBool('autoSaveSessions') ?? true;
+      if (autoSave) {
+        await _databaseService.saveSession(_currentSession!);
+        _sessionHistory.add(_currentSession!);
+        print('Session completed and saved');
+      } else {
+        print('Session completed (auto-save disabled)');
+      }
+
       notifyListeners();
     }
   }

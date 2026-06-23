@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:aivivabot/providers/auth_provider.dart';
+import 'package:aivivabot/providers/settings_provider.dart';
+import 'package:aivivabot/services/local/database_service.dart';
 import 'package:aivivabot/routes.dart';
 
 // ============================================================
@@ -365,21 +372,33 @@ class _SettingsScreenState extends State<SettingsScreen>
               title: 'System Default',
               value: 0,
               groupValue: _selectedTheme,
-              onChanged: (v) => setState(() { _selectedTheme = v ?? 0; _isDarkMode = false; _saveSettings(); }),
+              onChanged: (v) {
+                setState(() { _selectedTheme = v ?? 0; _isDarkMode = false; });
+                context.read<SettingsProvider>().setThemeMode(ThemeMode.system);
+                _saveSettings();
+              },
               isDark: isDark,
             ),
             _buildRadioOption(
               title: 'Light Mode',
               value: 1,
               groupValue: _selectedTheme,
-              onChanged: (v) => setState(() { _selectedTheme = v ?? 1; _isDarkMode = false; _saveSettings(); }),
+              onChanged: (v) {
+                setState(() { _selectedTheme = v ?? 1; _isDarkMode = false; });
+                context.read<SettingsProvider>().setThemeMode(ThemeMode.light);
+                _saveSettings();
+              },
               isDark: isDark,
             ),
             _buildRadioOption(
               title: 'Dark Mode',
               value: 2,
               groupValue: _selectedTheme,
-              onChanged: (v) => setState(() { _selectedTheme = v ?? 2; _isDarkMode = true; _saveSettings(); }),
+              onChanged: (v) {
+                setState(() { _selectedTheme = v ?? 2; _isDarkMode = true; });
+                context.read<SettingsProvider>().setThemeMode(ThemeMode.dark);
+                _saveSettings();
+              },
               isDark: isDark,
             ),
           ],
@@ -790,25 +809,48 @@ class _SettingsScreenState extends State<SettingsScreen>
               _buildAboutButton(
                 icon: Icons.rate_review,
                 title: 'Rate the App',
-                onTap: () {},
+                onTap: () async {
+                  final uri = Uri.parse('https://play.google.com/store/apps/details?id=com.aivivabot.app');
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not open app store')),
+                    );
+                  }
+                },
                 isDark: isDark,
               ),
               _buildAboutButton(
                 icon: Icons.share,
                 title: 'Share with Friends',
-                onTap: () {},
+                onTap: () {
+                  Share.share(
+                    'Check out AI VivaBot - your AI-powered academic assessment assistant! https://aivivabot.vercel.app',
+                  );
+                },
                 isDark: isDark,
               ),
               _buildAboutButton(
                 icon: Icons.privacy_tip,
                 title: 'Privacy Policy',
-                onTap: () {},
+                onTap: () async {
+                  final uri = Uri.parse('https://aivivabot.vercel.app/privacy');
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                },
                 isDark: isDark,
               ),
               _buildAboutButton(
                 icon: Icons.description,
                 title: 'Terms of Service',
-                onTap: () {},
+                onTap: () async {
+                  final uri = Uri.parse('https://aivivabot.vercel.app/terms');
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  }
+                },
                 isDark: isDark,
               ),
               const SizedBox(height: 16),
@@ -1005,6 +1047,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 _autoBackup = false;
                 _saveSettings();
               });
+              context.read<SettingsProvider>().resetAllSettings();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Settings reset to default')),
@@ -1020,20 +1063,25 @@ class _SettingsScreenState extends State<SettingsScreen>
   void _showClearDataDialog(bool isDark) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('Clear All Data'),
         content: const Text('This will delete all your sessions, reports, and progress. This action cannot be undone.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Data cleared successfully')),
-              );
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final db = DatabaseService();
+              await db.deleteAllSessions();
+              await db.deleteAllReports();
+              if (ctx.mounted) {
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  const SnackBar(content: Text('All data cleared successfully')),
+                );
+              }
             },
             child: const Text('Clear', style: TextStyle(color: Colors.red)),
           ),
@@ -1045,20 +1093,46 @@ class _SettingsScreenState extends State<SettingsScreen>
   void _showExportDialog(bool isDark) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('Export Data'),
         content: const Text('Export your sessions and reports as JSON file?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(ctx),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Data exported successfully')),
-              );
+            onPressed: () async {
+              Navigator.pop(ctx);
+              try {
+                final db = DatabaseService();
+                final sessions = await db.getAllSessions();
+                final reports = await db.getAllReports();
+                final exportData = jsonEncode({
+                  'exportDate': DateTime.now().toIso8601String(),
+                  'app': 'AI VivaBot',
+                  'sessions': sessions.map((s) => s.toJson()).toList(),
+                  'reports': reports.map((r) => r.toJson()).toList(),
+                });
+                final dir = await getApplicationDocumentsDirectory();
+                final file = File('${dir.path}/aivivabot_export_${DateTime.now().millisecondsSinceEpoch}.json');
+                await file.writeAsString(exportData);
+                await Share.shareXFiles(
+                  [XFile(file.path)],
+                  text: 'AI VivaBot Data Export',
+                );
+                if (ctx.mounted) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    const SnackBar(content: Text('Data exported successfully')),
+                  );
+                }
+              } catch (e) {
+                if (ctx.mounted) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    SnackBar(content: Text('Export failed: $e')),
+                  );
+                }
+              }
             },
             child: const Text('Export', style: TextStyle(color: Color(0xFF2A5CFF))),
           ),
