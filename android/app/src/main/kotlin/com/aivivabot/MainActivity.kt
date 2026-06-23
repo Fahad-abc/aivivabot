@@ -1,4 +1,4 @@
-package com.example.aivivabot
+package com.aivivabot
 
 import io.flutter.embedding.android.FlutterActivity
 

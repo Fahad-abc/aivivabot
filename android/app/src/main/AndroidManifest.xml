@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.aivivabot">
+    package="com.aivivabot">
 
     <!-- ALL PERMISSIONS FOR VIVABOT -->
     <uses-permission android:name="android.permission.INTERNET" />

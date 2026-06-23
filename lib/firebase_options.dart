@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBlaawK7JuiOCts7f9oewrZ3RnVjq9Uacs',
-    appId: '1:496798876863:android:2cfe01618af78aceae320a',
+    appId: '1:496798876863:android:7e62fc3dd5e32600ae320a',
     messagingSenderId: '496798876863',
     projectId: 'aivivabot',
     storageBucket: 'aivivabot.firebasestorage.app',
